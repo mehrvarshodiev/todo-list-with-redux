@@ -1,0 +1,228 @@
+.todos_wrapper {
+  width: 100%;
+  height: max-content;
+}
+
+.todos_header {
+  width: 100%;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  z-index: 333;
+  margin-bottom: 2rem;
+}
+
+.todos_header > .logo {
+  font: 500 2rem cursive, sans-serif;
+  cursor: pointer;
+  color: #003;
+}
+.todos_header > .logo > span {
+  font: 700 2.1rem cursive, sans-serif;
+  color: #94d8f3;
+}
+.todos_header .logo:hover {
+  color: #94d8f3;
+}
+
+.todos_header > .logo:hover > span {
+  color: #003;
+}
+
+.add_btn {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 5px;
+  color: #002;
+  background: #fff;
+  border: 2px solid #003;
+  font: 700 1.5rem cursive, sans-serif;
+  transition: all 0.3s ease-out;
+}
+.add_btn:hover {
+  background: #003;
+  color: #fff;
+}
+
+.todos_main {
+  width: 100%;
+  min-height: calc(100vh - 120px);
+  padding: 2rem;
+  position: relative;
+  background: #fff;
+}
+
+.sidebar {
+  width: 300px;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 2rem;
+}
+
+.sidebar .search_todo {
+  margin-bottom: 3rem;
+}
+
+.sidebar .search_todo > input[type="search"] {
+  width: 250px;
+  border: none;
+  border-bottom: 2px solid #787777;
+  background: none;
+  outline: none;
+  padding: 0.6rem;
+  font-size: 1.2rem;
+}
+.sidebar .search_todo > input[type="search"]:focus {
+  border-color: #003;
+  color: #003;
+}
+.sidebar .search_todo > input[type="search"]:focus::placeholder {
+  color: #003;
+}
+
+.filter_todos > select {
+  width: 250px;
+  padding: 0.6rem;
+  border: 2px solid #787777;
+  border-radius: 5px;
+  font-size: 1.2rem;
+}
+
+.filter_todos > select:focus {
+  color: #003;
+}
+
+.todo_cards {
+  width: calc(100% - 400px);
+  max-height: 680px;
+  margin-left: auto;
+  padding: 1.5rem 4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 300px));
+  justify-content: center;
+  gap: 1.5rem;
+  overflow-y: auto;
+}
+
+.todo_cards > .card {
+  background: red;
+  min-height: 250px;
+  background: #fff;
+  box-shadow: 0 0 5px 1px #787777;
+  border-radius: 5px;
+  padding: 1rem;
+  position: relative;
+}
+.card > h1 {
+  font: 500 1.3rem Arial, Helvetica, sans-serif;
+  border-bottom: 1px dotted #003;
+  padding-bottom: 0.3rem;
+  text-transform: capitalize;
+  color: #003;
+  margin-bottom: 0.6rem;
+}
+.card > h1.completed {
+  text-decoration: line-through;
+  color: #009600;
+}
+.card > p {
+  font: 400 1rem "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #787777;
+  margin-bottom: 0.6rem;
+}
+
+.card > .setting {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  position: absolute;
+  bottom: 0.4rem;
+  left: 0;
+  padding: 0 1rem;
+}
+
+.setting > .change_status_content {
+  margin-right: auto;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 3rem;
+  border-right: 1px solid #94d8f3;
+}
+.setting > .change_status_content > label {
+  margin-left: 0.5rem;
+  color: #003;
+  font: 500 1rem Verdana, Geneva, Tahoma, sans-serif;
+}
+.setting > .change_status_content > input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+}
+.change_status_content
+  :is(input[type="checkbox"]:checked, input[type="checkbox"]:checked ~ label) {
+  accent-color: #009600;
+  color: #009600;
+}
+
+.setting > .delete_btn {
+  padding: 5px;
+  background: none;
+  border: none;
+  outline: none;
+  color: #ff1414;
+  font: 500 1rem Verdana, Geneva, Tahoma, sans-serif;
+  cursor: pointer;
+}
+
+.setting > .delete_btn:hover {
+  opacity: 0.5;
+}
+
+.no_todos {
+  text-transform: uppercase;
+  color: #003;
+  font: 500 2rem cursive, sans-serif;
+}
+
+.loader {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  position: fixed;
+  z-index: 555;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  border: 15px solid #d5eaec;
+  border-right-color: #003;
+  animation: loader 0.4s infinite;
+}
+
+@keyframes loader {
+  0% {
+    rotate: 0deg;
+  }
+  25% {
+    /* transform: rotate(90deg); */
+    rotate: 90deg;
+  }
+  50% {
+    /* transform: rotate(180deg); */
+    rotate: 180deg;
+  }
+  75% {
+    /* transform: rotate(270deg); */
+    rotate: 270deg;
+  }
+  100% {
+    /* transform: rotate(360deg); */
+    rotate: 360deg;
+  }
+}

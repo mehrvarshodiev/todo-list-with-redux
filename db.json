@@ -1,0 +1,22 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "Traveling",
+      "desc": "You have to travel in the best places of the world",
+      "complete": false
+    },
+    {
+      "id": 2,
+      "title": "Learn new technologies",
+      "desc": "Learn, practice and improve skills in the field of developing",
+      "complete": false
+    },
+    {
+      "id": 3,
+      "title": "Passing an exam",
+      "desc": "Tommorrow morning get up early and go to university to pass some f... exam.",
+      "complete": false
+    }
+  ]
+}
