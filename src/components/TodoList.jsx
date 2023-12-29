@@ -10,19 +10,37 @@ import {
   getTodos,
 } from "../store/actions/todosAction";
 
+const getRandomColors = () => {
+  const r = Math.ceil(Math.random() * 255);
+  const g = Math.ceil(Math.random() * 255);
+  const b = Math.ceil(Math.random() * 255);
+  const a = (Math.random() * 0.5).toFixed(2);
+  const rgba = `rgba(${r}, ${g}, ${b}, ${a})`;
+  return rgba;
+};
+
 const TodoList = () => {
-  let [idx, setIdx] = useState("");
+  const [randomRGBA, setRandomRGBA] = useState([]);
+  let [idx, setIdx] = useState(null);
   const todos = useSelector((state) => state.todosReducer.todos);
   const loading = useSelector((state) => state.todosReducer.loading);
   const searchTodo = useSelector((state) => state.todosReducer.searchTodo);
   const isCompleted = useSelector((state) => state.todosReducer.isCompleted);
+  const dispatch = useDispatch();
   const [cloneTodos, setCloneTodos] = useState(todos);
   const renderTodos = searchTodo.toLowerCase().trim() ? cloneTodos : todos;
-
-  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getTodos());
   }, []);
+  useEffect(() => {
+    if (todos?.length) {
+      let randomColors = [];
+      for (let i = 0; i < todos.length; i++) {
+        randomColors.push(getRandomColors());
+      }
+      setRandomRGBA(randomColors);
+    }
+  }, [todos.length]);
 
   useEffect(() => {
     setCloneTodos(
@@ -89,32 +107,44 @@ const TodoList = () => {
           {loading ? (
             <div className="loader"></div>
           ) : todos?.length > 0 ? (
-            renderTodos.map((todo) => (
-              <div className="card" key={todo.id}>
-                <h1
-                  className={`${isCompleted && todo.id === idx && "completed"}`}
+            renderTodos.map((todo, i) => {
+              return (
+                <div
+                  className="card"
+                  key={todo.id}
+                  style={{
+                    background: randomRGBA[i],
+                  }}
                 >
-                  {todo["title"]}
-                </h1>
-                <p>{todo["desc"]}</p>
-                <div className="setting">
-                  <div className="change_status_content">
-                    <input
-                      type="checkbox"
-                      id={todo.id}
-                      onChange={() => handleChangeStatus(todo.id)}
-                    />
-                    <label htmlFor={todo.id}>Complete</label>
-                  </div>
-                  <button
-                    className="delete_btn"
-                    onClick={() => handleDeleteBtn(todo)}
+                  <h1
+                    className={`${
+                      isCompleted && todo.id == idx && "completed"
+                    }`}
                   >
-                    Delete
-                  </button>
+                    {todo["title"]}
+                  </h1>
+                  <p>{todo["desc"]}</p>
+                  <div className="setting">
+                    <div className="change_status_content">
+                      <input
+                        type="checkbox"
+                        id={todo.id}
+                        onChange={() => {
+                          handleChangeStatus(todo.id);
+                        }}
+                      />
+                      <label htmlFor={todo.id}>Complete</label>
+                    </div>
+                    <button
+                      className="delete_btn"
+                      onClick={() => handleDeleteBtn(todo)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <div className="no_todos">No todos here!</div>
           )}

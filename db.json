@@ -17,6 +17,12 @@
       "title": "Passing an exam",
       "desc": "Tommorrow morning get up early and go to university to pass some f... exam.",
       "complete": false
+    },
+    {
+      "id": 274,
+      "title": "New task",
+      "desc": "some description...",
+      "complete": false
     }
   ]
 }

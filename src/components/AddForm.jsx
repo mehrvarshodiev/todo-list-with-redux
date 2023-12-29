@@ -25,6 +25,7 @@ const AddForm = () => {
   const handleCloseModal = (e) => {
     if (e.target.matches(".overlay.show")) {
       dispatch({ type: SHOW_MODAL, payload: false });
+      setNewTodo(initialValue);
       document.body.style.overflow = "auto";
     }
   };

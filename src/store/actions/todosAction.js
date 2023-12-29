@@ -33,7 +33,6 @@ export const postTodo = (newTodo) => {
     try {
       if (!navigator.onLine) {
         alert("Please check your internet connection and try again!");
-
         return;
       } else {
         dispatch({ type: LOADER, payload: true });
@@ -64,7 +63,7 @@ export const postTodo = (newTodo) => {
 };
 
 export const deleteTodo = (id) => {
-  return async (dispatch) => {
+  return async () => {
     try {
       if (!navigator.onLine) {
         alert("Please check your internet connection and try again!");
