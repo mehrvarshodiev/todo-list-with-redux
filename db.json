@@ -16,7 +16,7 @@
       "id": 3,
       "title": "Passing an exam",
       "desc": "Tommorrow morning get up early and go to university to pass some f... exam.",
-      "complete": false
+      "complete": true
     }
   ]
 }
