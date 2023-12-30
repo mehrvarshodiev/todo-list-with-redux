@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./TodoList.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  CHANGE_STATUS,
   LOADER,
   SET_SEARCH_TODO,
   SHOW_MODAL,
+  changeTodoStatus,
   deleteTodo,
   getTodos,
 } from "../store/actions/todosAction";
@@ -21,17 +21,18 @@ const getRandomColors = () => {
 
 const TodoList = () => {
   const [randomRGBA, setRandomRGBA] = useState([]);
-  let [idx, setIdx] = useState(null);
   const todos = useSelector((state) => state.todosReducer.todos);
   const loading = useSelector((state) => state.todosReducer.loading);
   const searchTodo = useSelector((state) => state.todosReducer.searchTodo);
-  const isCompleted = useSelector((state) => state.todosReducer.isCompleted);
+  const changeStatus = useSelector((state) => state.todosReducer.changeStatus);
   const dispatch = useDispatch();
   const [cloneTodos, setCloneTodos] = useState(todos);
   const renderTodos = searchTodo.toLowerCase().trim() ? cloneTodos : todos;
+
   useEffect(() => {
     dispatch(getTodos());
   }, []);
+
   useEffect(() => {
     if (todos?.length) {
       let randomColors = [];
@@ -62,12 +63,12 @@ const TodoList = () => {
     dispatch({ type: SET_SEARCH_TODO, payload: e.target.value });
     setTimeout(() => {
       dispatch({ type: LOADER, payload: false });
-    }, 600);
+    }, 400);
   };
 
-  const handleChangeStatus = (id) => {
-    setIdx(id);
-    dispatch({ type: CHANGE_STATUS, payload: !isCompleted });
+  const handleChangeStatus = (todo) => {
+    dispatch(changeTodoStatus(todo));
+    dispatch(getTodos());
   };
 
   const showAddModal = (e) => {
@@ -116,24 +117,23 @@ const TodoList = () => {
                     background: randomRGBA[i],
                   }}
                 >
-                  <h1
-                    className={`${
-                      isCompleted && todo.id == idx && "completed"
-                    }`}
-                  >
+                  <h1 className={`${todo.complete && "completed"}`}>
                     {todo["title"]}
                   </h1>
                   <p>{todo["desc"]}</p>
                   <div className="setting">
                     <div className="change_status_content">
                       <input
+                        checked={todo.complete}
                         type="checkbox"
                         id={todo.id}
-                        onChange={() => {
-                          handleChangeStatus(todo.id);
+                        onClick={() => {
+                          handleChangeStatus(todo);
                         }}
                       />
-                      <label htmlFor={todo.id}>Complete</label>
+                      <label htmlFor={todo.id}>
+                        {todo.complete ? "Completed" : "Pending"}
+                      </label>
                     </div>
                     <button
                       className="delete_btn"

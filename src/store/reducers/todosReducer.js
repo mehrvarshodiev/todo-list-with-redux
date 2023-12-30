@@ -13,7 +13,7 @@ const initialData = {
   filterTodos: [], //NOT done!
   loading: false,
   searchTodo: "",
-  isCompleted: false,
+  changeStatus: false,
   showModal: false,
   newTodo: {},
 };
@@ -25,7 +25,7 @@ export const todosReducer = (state = initialData, action) => {
     case SET_SEARCH_TODO:
       return { ...state, searchTodo: action.payload };
     case CHANGE_STATUS:
-      return { ...state, isCompleted: action.payload };
+      return { ...state, changeStatus: action.payload };
     case GET_TODOS:
       return { ...state, todos: action.payload };
     case POST_TODO:

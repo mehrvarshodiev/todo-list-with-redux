@@ -19,11 +19,33 @@ export const getTodos = () => {
         dispatch({ type: GET_TODOS, payload: todosData });
         setTimeout(() => {
           dispatch({ type: LOADER, payload: false });
-        }, 1000);
+        }, 500);
       }
     } catch (error) {
       alert("Error fetching data!");
       dispatch({ type: LOADER, payload: false });
+    }
+  };
+};
+
+export const changeTodoStatus = (todo) => {
+  console.log(todo.id);
+  console.log(todo.title);
+  return async (dispatch) => {
+    try {
+      const response = await fetch(`http://localhost:3000/todos/${todo.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          complete: !todo.complete,
+        }),
+      });
+      const updatedTodoData = await response.json();
+      dispatch({ type: CHANGE_STATUS, payload: updatedTodoData.complete });
+    } catch (error) {
+      alert("Error updating todo!");
     }
   };
 };
@@ -53,7 +75,7 @@ export const postTodo = (newTodo) => {
         dispatch({ type: GET_TODOS, payload: todosData });
         setTimeout(() => {
           dispatch({ type: LOADER, payload: false });
-        }, 1000);
+        }, 500);
       }
     } catch (error) {
       alert("Error fetching data!");
