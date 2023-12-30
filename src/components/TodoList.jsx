@@ -24,7 +24,6 @@ const TodoList = () => {
   const todos = useSelector((state) => state.todosReducer.todos);
   const loading = useSelector((state) => state.todosReducer.loading);
   const searchTodo = useSelector((state) => state.todosReducer.searchTodo);
-  const changeStatus = useSelector((state) => state.todosReducer.changeStatus);
   const dispatch = useDispatch();
   const [cloneTodos, setCloneTodos] = useState(todos);
   const renderTodos = searchTodo.toLowerCase().trim() ? cloneTodos : todos;
@@ -51,11 +50,9 @@ const TodoList = () => {
     );
   }, [searchTodo]);
 
-  const handleDeleteBtn = ({ id }) => {
-    const deleteConfirmation = confirm(
-      "Are you sure you want to delete this todo?"
-    );
-    deleteConfirmation && (dispatch(deleteTodo(id)), dispatch(getTodos()));
+  const showAddModal = () => {
+    dispatch({ type: SHOW_MODAL, payload: true });
+    document.body.style.overflow = "hidden";
   };
 
   const handleSearchTodo = (e) => {
@@ -63,17 +60,21 @@ const TodoList = () => {
     dispatch({ type: SET_SEARCH_TODO, payload: e.target.value });
     setTimeout(() => {
       dispatch({ type: LOADER, payload: false });
-    }, 400);
+    }, 250);
   };
 
   const handleChangeStatus = (todo) => {
     dispatch(changeTodoStatus(todo));
+    dispatch({ type: SET_SEARCH_TODO, payload: "" });
     dispatch(getTodos());
   };
 
-  const showAddModal = (e) => {
-    dispatch({ type: SHOW_MODAL, payload: true });
-    document.body.style.overflow = "hidden";
+  const handleDeleteTodo = ({ id }) => {
+    const deleteConfirmation = confirm(
+      "Are you sure you want to delete this todo?"
+    );
+    deleteConfirmation && (dispatch(deleteTodo(id)), dispatch(getTodos()));
+    dispatch({ type: SET_SEARCH_TODO, payload: "" });
   };
 
   return (
@@ -127,7 +128,7 @@ const TodoList = () => {
                         checked={todo.complete}
                         type="checkbox"
                         id={todo.id}
-                        onClick={() => {
+                        onChange={() => {
                           handleChangeStatus(todo);
                         }}
                       />
@@ -137,7 +138,7 @@ const TodoList = () => {
                     </div>
                     <button
                       className="delete_btn"
-                      onClick={() => handleDeleteBtn(todo)}
+                      onClick={() => handleDeleteTodo(todo)}
                     >
                       Delete
                     </button>
