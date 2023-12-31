@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./TodoList.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   LOADER,
+  SET_FILTER_TODOS,
   SET_SEARCH_TODO,
   SHOW_MODAL,
   changeTodoStatus,
@@ -20,14 +21,17 @@ const getRandomColors = () => {
 };
 
 const TodoList = () => {
+  const dispatch = useDispatch();
   const [randomRGBA, setRandomRGBA] = useState([]);
   const todos = useSelector((state) => state.todosReducer.todos);
   const loading = useSelector((state) => state.todosReducer.loading);
   const searchTodo = useSelector((state) => state.todosReducer.searchTodo);
-  const dispatch = useDispatch();
-  const [cloneTodos, setCloneTodos] = useState(todos);
-  const renderTodos = searchTodo.toLowerCase().trim() ? cloneTodos : todos;
+  const filterTodos = useSelector((state) => state.todosReducer.filterTodos);
+  const filterSelectElRef = useRef("");
 
+  const [cloneTodos, setCloneTodos] = useState(todos);
+  const renderTodos =
+    searchTodo.toLowerCase().trim() || filterTodos ? cloneTodos : todos;
   useEffect(() => {
     dispatch(getTodos());
   }, []);
@@ -50,9 +54,31 @@ const TodoList = () => {
     );
   }, [searchTodo]);
 
+  useEffect(() => {
+    console.log(filterTodos);
+    setCloneTodos(
+      todos.filter((todo) => {
+        if (filterTodos == "all") {
+          return todo;
+        }
+        return String(todo.complete) == filterTodos;
+      })
+    );
+  }, [filterTodos]);
+
+  const resetTodoFiltering = () => {
+    dispatch({ type: SET_FILTER_TODOS, payload: "" });
+    filterSelectElRef.current.value = "all";
+  };
+  const resetTodoSearching = () => {
+    dispatch({ type: SET_SEARCH_TODO, payload: "" });
+  };
+
   const showAddModal = () => {
     dispatch({ type: SHOW_MODAL, payload: true });
     document.body.style.overflow = "hidden";
+    dispatch({ type: SET_SEARCH_TODO, payload: "" });
+    resetTodoFiltering();
   };
 
   const handleSearchTodo = (e) => {
@@ -61,11 +87,22 @@ const TodoList = () => {
     setTimeout(() => {
       dispatch({ type: LOADER, payload: false });
     }, 250);
+    resetTodoFiltering();
   };
+
+  function handleFilterTodos(e) {
+    dispatch({ type: LOADER, payload: true });
+    dispatch({ type: SET_FILTER_TODOS, payload: e.target.value });
+    setTimeout(() => {
+      dispatch({ type: LOADER, payload: false });
+    }, 250);
+    resetTodoSearching();
+  }
 
   const handleChangeStatus = (todo) => {
     dispatch(changeTodoStatus(todo));
-    dispatch({ type: SET_SEARCH_TODO, payload: "" });
+    resetTodoSearching();
+    resetTodoFiltering();
     dispatch(getTodos());
   };
 
@@ -74,7 +111,8 @@ const TodoList = () => {
       "Are you sure you want to delete this todo?"
     );
     deleteConfirmation && (dispatch(deleteTodo(id)), dispatch(getTodos()));
-    dispatch({ type: SET_SEARCH_TODO, payload: "" });
+    resetTodoSearching();
+    resetTodoFiltering();
   };
 
   return (
@@ -98,10 +136,14 @@ const TodoList = () => {
             />
           </div>
           <div className="filter_todos">
-            <select name="filter-by-status">
-              <option value="">All</option>
+            <select
+              ref={filterSelectElRef}
+              title="filter todos"
+              onChange={handleFilterTodos}
+            >
+              <option value="all">All</option>
               <option value="false">Pending</option>
-              <option value="true">Complete</option>
+              <option value="true">Completed</option>
             </select>
           </div>
         </aside>

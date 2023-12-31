@@ -10,7 +10,7 @@
       "id": 2,
       "title": "Learn new technologies",
       "desc": "Learn, practice and improve skills in the field of developing",
-      "complete": false
+      "complete": true
     },
     {
       "id": 3,

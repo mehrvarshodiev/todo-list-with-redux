@@ -3,30 +3,9 @@ export const POST_TODO = "POST_TODO";
 export const DELETE_TODO = "DELETE_TODO";
 export const LOADER = "LOADER";
 export const SET_SEARCH_TODO = "SET_SEARCH_TODO";
+export const SET_FILTER_TODOS = "SET_FILTER_TODOS";
 export const CHANGE_STATUS = "CHANGE_STATUS";
 export const SHOW_MODAL = "SHOW_MODAL";
-
-export const getTodos = () => {
-  return async (dispatch) => {
-    try {
-      if (!navigator.onLine) {
-        alert("Please check your internet connection and try again!");
-        return;
-      } else {
-        dispatch({ type: LOADER, payload: true });
-        const response = await fetch("http://localhost:3000/todos");
-        const todosData = await response.json();
-        dispatch({ type: GET_TODOS, payload: todosData });
-        setTimeout(() => {
-          dispatch({ type: LOADER, payload: false });
-        }, 500);
-      }
-    } catch (error) {
-      alert("Error fetching data!");
-      dispatch({ type: LOADER, payload: false });
-    }
-  };
-};
 
 export const changeTodoStatus = (todo) => {
   console.log(todo.id);
@@ -52,11 +31,11 @@ export const changeTodoStatus = (todo) => {
 
 export const postTodo = (newTodo) => {
   return async (dispatch) => {
-    try {
-      if (!navigator.onLine) {
-        alert("Please check your internet connection and try again!");
-        return;
-      } else {
+    if (!navigator.onLine) {
+      alert("Please check your internet connection and try again!");
+      return;
+    } else {
+      try {
         dispatch({ type: LOADER, payload: true });
         const response = await fetch(`http://localhost:3000/todos`, {
           method: "POST",
@@ -76,27 +55,49 @@ export const postTodo = (newTodo) => {
         setTimeout(() => {
           dispatch({ type: LOADER, payload: false });
         }, 500);
+      } catch (error) {
+        alert("Error fetching data!");
+        dispatch({ type: LOADER, payload: false });
       }
-    } catch (error) {
-      alert("Error fetching data!");
-      dispatch({ type: LOADER, payload: false });
     }
   };
 };
 
 export const deleteTodo = (id) => {
   return async () => {
-    try {
-      if (!navigator.onLine) {
-        alert("Please check your internet connection and try again!");
-        return;
-      } else {
+    if (!navigator.onLine) {
+      alert("Please check your internet connection and try again!");
+      return;
+    } else {
+      try {
         await fetch(`http://localhost:3000/todos/${id}`, {
           method: "DELETE",
         });
+      } catch (error) {
+        alert("Error deleting todo!");
       }
-    } catch (error) {
-      alert("Error deleting todo!");
+    }
+  };
+};
+
+export const getTodos = () => {
+  return async (dispatch) => {
+    if (!navigator.onLine) {
+      alert("Please check your internet connection and try again!");
+      return;
+    } else {
+      try {
+        dispatch({ type: LOADER, payload: true });
+        const response = await fetch("http://localhost:3000/todos");
+        const todosData = await response.json();
+        dispatch({ type: GET_TODOS, payload: todosData });
+        setTimeout(() => {
+          dispatch({ type: LOADER, payload: false });
+        }, 500);
+      } catch (error) {
+        alert("Error fetching data!");
+        dispatch({ type: LOADER, payload: false });
+      }
     }
   };
 };

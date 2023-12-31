@@ -4,13 +4,14 @@ import {
   GET_TODOS,
   LOADER,
   POST_TODO,
+  SET_FILTER_TODOS,
   SET_SEARCH_TODO,
   SHOW_MODAL,
 } from "../actions/todosAction";
 
 const initialData = {
   todos: [],
-  filterTodos: [], //NOT done!
+  filterTodos: "",
   loading: false,
   searchTodo: "",
   changeStatus: false,
@@ -32,6 +33,8 @@ export const todosReducer = (state = initialData, action) => {
       return { ...state, newTodo: action.payload };
     case DELETE_TODO:
       return { ...state, todos: action.payload };
+    case SET_FILTER_TODOS:
+      return { ...state, filterTodos: action.payload };
     case SHOW_MODAL:
       return { ...state, showModal: action.payload };
     default:
